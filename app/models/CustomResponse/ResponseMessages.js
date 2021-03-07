@@ -7,6 +7,7 @@ const MESSAGES = {
     SCORE_DETAILS : 'Score Details',
     USER_DETAILS : 'User Records',
     USER_EXIST : 'Email Id Already Exist',
+    NOT_FOUND : 'No Records Found'
 };
 
 module.exports = MESSAGES;
