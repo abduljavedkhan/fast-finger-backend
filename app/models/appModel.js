@@ -24,7 +24,7 @@ const Game = function (data) {
 User.createUser = (newUser, result) => {
     dbCon.query(QUERY.CHECK_USER_EXIST, [newUser.email], (err, res) => {
         if (err) {
-            console.log('Error DB Service User Already Exist ', err);
+            console.log('Error DB Service while checking user email ', err);
             result(err, null);
         }else{
         if (res && res.length > 0) {

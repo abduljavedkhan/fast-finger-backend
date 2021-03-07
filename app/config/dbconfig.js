@@ -1,8 +1,8 @@
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
-    PASSWORD: "fastfinger@2021",
-    DB: "fast_finger",
+    HOST: "freedb.tech",
+    USER: "freedbtech_javed",
+    PASSWORD: "freedb@21",
+    DB: "freedbtech_fastfingertest",
     dialect: "mysql",
     pool: {
       max: 10,
