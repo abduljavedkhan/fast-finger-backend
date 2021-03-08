@@ -6,7 +6,8 @@ const config = require("../config/auth.config");
 const MESSAGES = require('../models/CustomResponse/ResponseMessages');
 const CODES = require('../models/CustomResponse/ResponseCode');
 const STATUS = { SUCCESS: "true", FAIL: "false" };
-
+const bcrypt = require("bcryptjs");
+const salt = bcrypt.genSaltSync(10);
 const validateRequest = require('./../models/ValidateRequest/ValidateRequest');
 
 exports.signup = (req, res) => 
@@ -21,6 +22,7 @@ exports.signup = (req, res) =>
         errorResponse.setData({});
         res.send(new Response(errorResponse));
     }
+    new_user.password = bcrypt.hashSync(new_user.password, salt);
     User.createUser(new_user, (err, result) => {
         console.log('Controller: Register User ');
         if (err) {
@@ -61,6 +63,8 @@ exports.signin = (req, res) => {
         errorResponse.setData({});
         res.send(new Response(errorResponse));
     }
+    reqPassword = login.password;
+    login.password = bcrypt.hashSync(reqPassword, salt);
     User.getLoginDetails(login, (err, result) => {
         console.log('Controller: get Login Details ');
         if (err) {
@@ -81,17 +85,33 @@ exports.signin = (req, res) => {
             }
         }
         else {
-            const data = {
-                accessToken: jwt.sign({ userId: result.userId, email: result.email, username: result.username }, config.secret, {
-                    expiresIn: 86400 // 24 hours
-                  })
-            }
-            let successResponse = new ResponseBuilder();
-            successResponse.setStatusCode(CODES.SUCCESS);
-            successResponse.setStatus(STATUS.SUCCESS);
-            successResponse.setMessage(MESSAGES.USER_DETAILS);
-            successResponse.setData(data);
-            res.send(new Response(successResponse));
+            const isPasswordValid = bcrypt.compareSync(
+                reqPassword,
+                result.pwd
+              );
+              
+              if (isPasswordValid) {
+                const data = {
+                    accessToken: jwt.sign({ userId: result.userId, email: result.email, username: result.username }, config.secret, {
+                        expiresIn: 86400 // 24 hours
+                      }),
+                      userName: result.username
+                }
+                let successResponse = new ResponseBuilder();
+                successResponse.setStatusCode(CODES.SUCCESS);
+                successResponse.setStatus(STATUS.SUCCESS);
+                successResponse.setMessage(MESSAGES.USER_DETAILS);
+                successResponse.setData(data);
+                res.send(new Response(successResponse));
+              }else{
+                console.log('SignIn Controller: Invalid Password');  
+                let errorResponse = new ResponseBuilder();
+                errorResponse.setStatusCode(CODES.UNAUTHORIZED);
+                errorResponse.setStatus(STATUS.FAIL);
+                errorResponse.setMessage(MESSAGES.INVALID_PWD);
+                errorResponse.setData({});
+                res.send(new Response(errorResponse));
+              }  
         }
     });
 };

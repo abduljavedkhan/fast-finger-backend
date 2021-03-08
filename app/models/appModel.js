@@ -66,7 +66,7 @@ User.getLoginDetails = (login, result) => {
         else {
             if (res && res.length > 0) {
                 console.log('DB Service Login Details');
-                result(null, { userId: res[0].id, email: res[0].email, username: res[0].user_name });
+                result(null, { userId: res[0].id, email: res[0].email, username: res[0].user_name, pwd: res[0].password });
             }else{
             console.log('DB Service Login Details: No records found ');
             result({ type: "not_found" }, null);

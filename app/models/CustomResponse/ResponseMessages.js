@@ -8,8 +8,9 @@ const MESSAGES = {
     SCORE_DETAILS : 'Score Details',
     USER_DETAILS : 'User Records',
     USER_EXIST : 'Email Id Already Exist',
-    NOT_FOUND : 'No Records Found',
-    UNAUTHENTICATED : 'Auth token is Required!'
+    NOT_FOUND : 'No Records Found, Invalid Username or Password',
+    UNAUTHENTICATED : 'Auth token is Required!',
+    INVALID_PWD : 'Invalid Password'
 };
 
 module.exports = MESSAGES;
