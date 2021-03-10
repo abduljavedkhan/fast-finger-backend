@@ -10,6 +10,7 @@ const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const validateRequest = require('./../models/ValidateRequest/ValidateRequest');
 
+try{
 exports.signup = (req, res) => 
 {
     let new_user = new User(req.body);
@@ -114,7 +115,9 @@ exports.signin = (req, res) => {
               }  
         }
     });
-};
+}
+
+
 
 exports.list_all_users = (req, res) => {
     User.getAllUser((err, result) => {
@@ -189,5 +192,14 @@ exports.getgamescore = (req, res) => {
         successResponse.setData(data);
         res.send(new Response(successResponse));}
     });
-};
-
+    }
+}catch(err){
+        console.log('Global error catch '+ err.message);
+        let errorResponse = new ResponseBuilder();
+        errorResponse.setStatusCode(CODES.INTERNAL_SERVER_ERROR);
+        errorResponse.setStatus(STATUS.FAIL);
+        errorResponse.setMessage(err.message);
+        errorResponse.setData({});
+        res.send(new Response(errorResponse));
+        }
+    
