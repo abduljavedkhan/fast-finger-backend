@@ -10,7 +10,6 @@ const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const validateRequest = require('./../models/ValidateRequest/ValidateRequest');
 
-try{
 exports.signup = (req, res) => 
 {
     let new_user = new User(req.body);
@@ -22,7 +21,7 @@ exports.signup = (req, res) =>
         errorResponse.setMessage(MESSAGES.INCOMPLETE_REQUEST);
         errorResponse.setData({});
         res.send(new Response(errorResponse));
-    }
+    }else{
     new_user.password = bcrypt.hashSync(new_user.password, salt);
     User.createUser(new_user, (err, result) => {
         console.log('Controller: Register User ');
@@ -52,6 +51,7 @@ exports.signup = (req, res) =>
             res.send(new Response(successResponse));
         }
     });
+   }
 };
 
 exports.signin = (req, res) => {
@@ -63,7 +63,7 @@ exports.signin = (req, res) => {
         errorResponse.setMessage(MESSAGES.INCOMPLETE_REQUEST);
         errorResponse.setData({});
         res.send(new Response(errorResponse));
-    }
+    }else{
     reqPassword = login.password;
     login.password = bcrypt.hashSync(reqPassword, salt);
     User.getLoginDetails(login, (err, result) => {
@@ -86,12 +86,13 @@ exports.signin = (req, res) => {
             }
         }
         else {
-            const isPasswordValid = bcrypt.compareSync(
-                reqPassword,
-                result.pwd
-              );
+            // const isPasswordValid = bcrypt.compareSync(
+            //     reqPassword,
+            //     result.pwd
+            //   );
               
-              if (isPasswordValid) {
+              
+              if (login.password === result.pwd) {
                 const data = {
                     accessToken: jwt.sign({ userId: result.userId, email: result.email, username: result.username }, config.secret, {
                         expiresIn: 86400 // 24 hours
@@ -115,6 +116,7 @@ exports.signin = (req, res) => {
               }  
         }
     });
+   }
 }
 
 
@@ -140,11 +142,21 @@ exports.list_all_users = (req, res) => {
 };
 
 exports.gamescore = (req, res) => {
-    const scoreReq = {
-        player_id: req.body.player_id,
-        score: req.body.score
-    }
-    User.updateScore(scoreReq, (err, result) => {
+    
+    if (!validateRequest([req.body.player_id, req.body.score]))
+     {
+        let errorResponse = new ResponseBuilder();
+        errorResponse.setStatusCode(CODES.BAD_REQUEST);
+        errorResponse.setStatus(STATUS.FAIL);
+        errorResponse.setMessage(MESSAGES.INCOMPLETE_REQUEST);
+        errorResponse.setData({});
+        res.send(new Response(errorResponse));
+    }else{
+        const scoreReq = {
+            player_id: req.body.player_id,
+            score: req.body.score
+        }
+        User.updateScore(scoreReq, (err, result) => {
         console.log('Controller: update Score Details ');
         if (err) {
             let errorResponse = new ResponseBuilder();
@@ -161,9 +173,19 @@ exports.gamescore = (req, res) => {
         successResponse.setData(result.gameId);
         res.send(new Response(successResponse));}
     });
+  }
 };
 
 exports.getgamescore = (req, res) => {
+    if (!validateRequest([req.body.player_id]))
+    {
+       let errorResponse = new ResponseBuilder();
+       errorResponse.setStatusCode(CODES.BAD_REQUEST);
+       errorResponse.setStatus(STATUS.FAIL);
+       errorResponse.setMessage(MESSAGES.INCOMPLETE_REQUEST);
+       errorResponse.setData({});
+       res.send(new Response(errorResponse));
+   }else{
     User.getScore(req.body.player_id, (err, result) => {
         console.log('Controller: get Score Details ');
         if (err) {
@@ -192,14 +214,4 @@ exports.getgamescore = (req, res) => {
         successResponse.setData(data);
         res.send(new Response(successResponse));}
     });
-    }
-}catch(err){
-        console.log('Global error catch '+ err.message);
-        let errorResponse = new ResponseBuilder();
-        errorResponse.setStatusCode(CODES.INTERNAL_SERVER_ERROR);
-        errorResponse.setStatus(STATUS.FAIL);
-        errorResponse.setMessage(err.message);
-        errorResponse.setData({});
-        res.send(new Response(errorResponse));
-        }
-    
+    }}
