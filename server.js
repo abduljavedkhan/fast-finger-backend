@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express()
 const ResponseBuilder = require('./app/models/CustomResponse/ResponseBuilder');
 const Response = require('./app/models/CustomResponse/Response');
-
+const CODES = require('./app/models/CustomResponse/ResponseCode');
 const corsOptions = {
   origin: '*',
   methods: [
