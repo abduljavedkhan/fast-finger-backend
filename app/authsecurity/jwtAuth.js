@@ -27,9 +27,9 @@ verifyToken = (req, res, next) => {
       errorResponse.setData({});
       res.send(new Response(errorResponse));
     }else{
-    console.log('decodedid ' + decoded.id)
+    console.log('decodedid ' + decoded.userId)
   //  req.player_id = decoded.id;
-    req.body.player_id = decoded.id
+    req.body.player_id = decoded.userId
     req.body = req.body;
     next();}
   });
