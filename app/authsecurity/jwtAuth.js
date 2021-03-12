@@ -7,38 +7,33 @@ const CODES = require('../models/CustomResponse/ResponseCode');
 const STATUS = { SUCCESS: "true", FAIL: "false" };
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = req.headers["auth-token"];
 
-  if (!token) {
-    // return res.status(403).send({
-    //   message: "No token provided!"
-    // });
+  if (!token){
     let errorResponse = new ResponseBuilder();
     errorResponse.setStatusCode(CODES.UNAUTHENTICATED);
     errorResponse.setStatus(STATUS.FAIL);
     errorResponse.setMessage(MESSAGES.UNAUTHENTICATED);
     errorResponse.setData({});
     res.send(new Response(errorResponse));
-  }
+  }else{
 
   jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) {
-      // return res.status(401).send({
-      //   message: "Unauthorized!"
-      // });
+    if (err){
       let errorResponse = new ResponseBuilder();
       errorResponse.setStatusCode(CODES.UNAUTHORIZED);
       errorResponse.setStatus(STATUS.FAIL);
       errorResponse.setMessage(MESSAGES.UNAUTHORIZED);
       errorResponse.setData({});
       res.send(new Response(errorResponse));
-    }
+    }else{
     console.log('decodedid ' + decoded.id)
   //  req.player_id = decoded.id;
     req.body.player_id = decoded.id
     req.body = req.body;
-    next();
+    next();}
   });
+}
 };
 
 module.exports = verifyToken;
