@@ -30,7 +30,7 @@ app.use(function(err, req, res, next){
   console.error('Global error catch '+ err.message);
   let errorResponse = new ResponseBuilder();
   errorResponse.setStatusCode(CODES.INTERNAL_SERVER_ERROR);
-  errorResponse.setStatus(STATUS.FAIL);
+  errorResponse.setStatus("fail");
   errorResponse.setMessage(err.sqlMessage || err);
   errorResponse.setData({});
   res.send(new Response(errorResponse));
