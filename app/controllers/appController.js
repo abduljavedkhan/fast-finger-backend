@@ -73,7 +73,7 @@ exports.signin = (req, res) => {
                 let errorResponse = new ResponseBuilder();
                 errorResponse.setStatusCode(CODES.NOT_FOUND);
                 errorResponse.setStatus(STATUS.FAIL);
-                errorResponse.setMessage(MESSAGES.NOT_FOUND);
+                errorResponse.setMessage(MESSAGES.USER_NOT_FOUND);
                 errorResponse.setData({});
                 res.send(new Response(errorResponse));
             } else {
