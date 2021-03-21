@@ -3,7 +3,7 @@
 Url : https://ff-backend-ajk.herokuapp.com/
 
 ### About Game
-Rest APIs for Backend of Fast Finger:
+Backend: Rest APIs for Fast Finger:
 
 * SignIn 
 * SignUp
