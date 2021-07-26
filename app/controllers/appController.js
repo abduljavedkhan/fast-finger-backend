@@ -22,7 +22,8 @@ exports.signup = (req, res) =>
         errorResponse.setData({});
         res.send(new Response(errorResponse));
     }else{
-    new_user.password = bcrypt.hashSync(new_user.password, salt);
+   // new_user.password = bcrypt.hashSync(new_user.password, salt);
+
     User.createUser(new_user, (err, result) => {
         console.log('Controller: Register User ');
         if (err) {
@@ -64,8 +65,9 @@ exports.signin = (req, res) => {
         errorResponse.setData({});
         res.send(new Response(errorResponse));
     }else{
-    reqPassword = login.password;
-    login.password = bcrypt.hashSync(reqPassword, salt);
+    //reqPassword = login.password;
+    //login.password = bcrypt.hashSync(reqPassword, salt);
+    //console.log('login con dta ', login.email + " "+ login.password)
     User.getLoginDetails(login, (err, result) => {
         console.log('Controller: get Login Details ');
         if (err) {
@@ -87,24 +89,33 @@ exports.signin = (req, res) => {
         }
         else {
             // const isPasswordValid = bcrypt.compareSync(
-            //     reqPassword,
+            //     login.password,
             //     result.pwd
             //   );
               
               
-              if (login.password === result.pwd) {
-                const data = {
-                    accessToken: jwt.sign({ userId: result.userId, email: result.email, username: result.username }, config.secret, {
-                        expiresIn: 86400 // 24 hours
-                      }),
-                      userName: result.username
-                }
-                let successResponse = new ResponseBuilder();
-                successResponse.setStatusCode(CODES.SUCCESS);
-                successResponse.setStatus(STATUS.SUCCESS);
-                successResponse.setMessage(MESSAGES.USER_DETAILS);
-                successResponse.setData(data);
-                res.send(new Response(successResponse));
+             if (login.password === result.pwd) {
+                //if(isPasswordValid){
+                    console.log("here ", login.password + " : "+ result.pwd)
+                    try{
+                        const data = {
+                            accessToken: jwt.sign({ userId: result.userId, email: result.email, username: result.username }, config.secret, {
+                                expiresIn: 86400 // 24 hours
+                              }),
+                              userName: result.username
+                        }
+                        let successResponse = new ResponseBuilder();
+                        successResponse.setStatusCode(CODES.SUCCESS);
+                        successResponse.setStatus(STATUS.SUCCESS);
+                        successResponse.setMessage(MESSAGES.USER_DETAILS);
+                        successResponse.setData(data);
+                        res.send(new Response(successResponse));
+                    }
+                    catch(e){
+                        console.log('error ' + e.message)
+                    }
+
+
               }else{
                 console.log('SignIn Controller: Invalid Password');  
                 let errorResponse = new ResponseBuilder();

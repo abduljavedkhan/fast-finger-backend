@@ -57,6 +57,7 @@ User.getAllUser = (result) => {
 };
 //login data
 User.getLoginDetails = (login, result) => {
+  //  console.log('login dta ', login.email + " "+ login.password)
     dbCon.query(QUERY.LOGIN, [login.email, login.password], (err, res) => {
         if (err) {
             console.log('Error: get Login Details ' + err);
@@ -65,7 +66,7 @@ User.getLoginDetails = (login, result) => {
         }
         else {
             if (res && res.length > 0) {
-                console.log('DB Service Login Details');
+                console.log('DB Service Login Details '+ JSON.stringify({ userId: res[0].id, email: res[0].email, username: res[0].user_name, pwd: res[0].password }));
                 result(null, { userId: res[0].id, email: res[0].email, username: res[0].user_name, pwd: res[0].password });
             }else{
             console.log('DB Service Login Details: No records found ');

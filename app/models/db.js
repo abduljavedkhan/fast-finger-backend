@@ -1,7 +1,8 @@
 const dbConfig = require("../config/dbconfig.js");
 
 const mysql = require('mysql');
-
+const dbconfig = require("../config/dbconfig.js");
+console.log('db '+ dbconfig.PASSWORD)
 const connectionPool = mysql.createPool({
  // connectionLimit : dbConfig.pool.max,
   host     : dbConfig.HOST,

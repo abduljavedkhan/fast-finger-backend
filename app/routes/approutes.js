@@ -1,4 +1,16 @@
+// for error handling
+
+//method 1
 const use = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+//method 2
+function wrapAsync(fn) {
+    return function (req, res, next) {
+        fn(req, res, next).catch(e => next(e))
+    }
+}
+
+//API routes
 module.exports = app => {
 
     const users = require("../controllers/appController");

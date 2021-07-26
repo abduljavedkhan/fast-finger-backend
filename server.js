@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
 const app = express()
 const ResponseBuilder = require('./app/models/CustomResponse/ResponseBuilder');
 const Response = require('./app/models/CustomResponse/Response');
