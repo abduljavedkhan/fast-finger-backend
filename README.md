@@ -2,8 +2,12 @@
 
 Url : https://ff-backend-ajk.herokuapp.com/
 
+FE Demo Url : https://fast-finger-ajk.netlify.app
+
+FE repo Url : https://github.com/pesto-students/b6-fast-fingers-abduljavedkhan
+
 ### About Game
-Rest APIs for Backend of Fast Finger:
+Backend: Rest APIs for Fast Finger:
 
 * SignIn 
 * SignUp
